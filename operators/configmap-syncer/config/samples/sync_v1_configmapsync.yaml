@@ -1,0 +1,15 @@
+apiVersion: sync.example.com/v1
+kind: ConfigMapSync
+metadata:
+  labels:
+    app.kubernetes.io/name: configmap-syncer
+    app.kubernetes.io/managed-by: kustomize
+  name: configmapsync-sample
+  namespace: default
+spec:
+  sourceConfigMap:
+    name: source-config
+    namespace: default
+  targetNamespaces:
+    - kube-system
+    - kube-public

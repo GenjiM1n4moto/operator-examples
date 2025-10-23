@@ -1,0 +1,77 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+cover.out
+
+# Go build cache
+.gocache/
+**/.gocache/
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Kubernetes testing tools (downloaded binaries)
+bin/k8s/
+**/bin/k8s/
+bin/
+**/bin/
+
+# Controller build artifacts
+**/bin/controller-gen
+**/bin/setup-envtest
+**/bin/manager
+
+# Remove individual operator .gitignore files (use main one)
+operators/*/.gitignore
+
+# Docker build cache
+.docker/
+
+# Helm charts (if generated)
+**/dist/chart/
+
+# Local development files
+.env
+.env.local
+
+# Claude Code specific
+.claude/
+
+# Operator SDK generated files that might be environment specific
+PROJECT
+```

@@ -1,0 +1,12 @@
+apiVersion: sync.example.com/v1
+kind: ConfigMapSync
+metadata:
+  name: configmapsync-selector-sample
+  namespace: default
+spec:
+  sourceConfigMap:
+    name: source-config
+    namespace: default
+  selector:
+    matchLabels:
+      env: production
