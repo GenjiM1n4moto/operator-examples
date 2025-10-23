@@ -1,0 +1,65 @@
+# Test namespace with labels
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-namespace
+  labels:
+    environment: "production"
+    team: "platform"
+---
+# Test pod 1 - will match podlabeler-sample
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod-1
+  namespace: default
+  labels:
+    app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+---
+# Test pod 2 - will match podlabeler-sample
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod-2
+  namespace: default
+  labels:
+    app: nginx
+    version: v1
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+---
+# Test pod 3 - will match podlabeler-valuefrom
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  namespace: test-namespace
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: app
+    image: busybox:latest
+    command: ["sleep", "3600"]
+---
+# Test pod 4 - won't match any selector
+apiVersion: v1
+kind: Pod
+metadata:
+  name: unmatched-pod
+  namespace: default
+  labels:
+    app: other
+spec:
+  containers:
+  - name: other
+    image: busybox:latest
+    command: ["sleep", "3600"]

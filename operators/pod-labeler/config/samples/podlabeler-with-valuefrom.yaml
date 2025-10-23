@@ -1,0 +1,18 @@
+apiVersion: labels.example.com/v1
+kind: PodLabeler
+metadata:
+  name: podlabeler-valuefrom
+  namespace: test-namespace
+spec:
+  # Match all pods with app=myapp label
+  selector:
+    matchLabels:
+      app: myapp
+  # Extract values dynamically from namespace and pod labels
+  labelRules:
+    - key: "auto-environment"
+      valueFrom: "namespace.labels.environment"
+    - key: "auto-team"
+      valueFrom: "namespace.labels.team"
+    - key: "original-app-name"
+      valueFrom: "pod.labels.app"

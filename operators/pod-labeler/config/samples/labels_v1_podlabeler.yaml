@@ -1,0 +1,19 @@
+apiVersion: labels.example.com/v1
+kind: PodLabeler
+metadata:
+  labels:
+    app.kubernetes.io/name: pod-labeler
+    app.kubernetes.io/managed-by: kustomize
+  name: podlabeler-sample
+  namespace: default
+spec:
+  # Selector to match pods
+  selector:
+    matchLabels:
+      app: nginx
+  # Label rules to apply
+  labelRules:
+    - key: "managed-by"
+      value: "pod-labeler"
+    - key: "auto-labeled"
+      value: "true"
