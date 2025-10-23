@@ -93,9 +93,9 @@ func (e *ExternalStrategy) Backup(ctx context.Context, pvc *corev1.PersistentVol
 // buildBackupJob creates a Kubernetes Job for backing up PVC to external storage
 func (e *ExternalStrategy) buildBackupJob(backupName string, pvc *corev1.PersistentVolumeClaim, policy *backupv1alpha1.BackupPolicy, repoURL string) *batchv1.Job {
 	backoffLimit := int32(3)
-	// 完成后60秒自动清理（从10分钟改为1分钟）
+	// Auto-cleanup 60 seconds after completion (changed from 10 minutes to 1 minute)
 	ttlSecondsAfterFinished := int32(60)
-	// Job最多运行30分钟，避免频繁重试导致额外负载
+	// Job runs for at most 30 minutes to avoid excessive load from frequent retries
 	activeDeadlineSeconds := int64(1800)
 
 	labels := map[string]string{

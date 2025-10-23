@@ -1,34 +1,34 @@
 # Database-Operator
 
-## 项目简介
+## Project Overview
 
-Database-Operator 是一个 Kubernetes Operator，用于管理数据库集群的生命周期。这是一个高级难度的学习项目，展示了复杂状态机和高可用架构的实现。
+Database-Operator is a Kubernetes Operator for managing the lifecycle of database clusters. This is an advanced-level learning project that demonstrates complex state machine implementation and high-availability architecture.
 
-## 学习目标
+## Learning Objectives
 
-- **复杂状态机**: 数据库集群状态管理
-- **高可用架构**: 主从复制和故障转移
-- **数据持久化**: 数据安全和一致性保证
-- **集群管理**: 节点发现和集群配置
+- **Complex State Machine**: Database cluster state management
+- **High Availability Architecture**: Primary-replica replication and failover
+- **Data Persistence**: Data safety and consistency guarantees
+- **Cluster Management**: Node discovery and cluster configuration
 
-## 功能特性
+## Features
 
-- ✅ 数据库集群自动部署
-- ✅ 主从复制配置
-- ✅ 自动故障转移
-- ✅ 数据备份和恢复
-- ✅ 监控和告警集成
-- ✅ 滚动升级支持
+- ✅ Automated database cluster deployment
+- ✅ Primary-replica replication configuration
+- ✅ Automatic failover
+- ✅ Data backup and restore
+- ✅ Monitoring and alerting integration
+- ✅ Rolling upgrade support
 
-## 复杂度等级
+## Complexity Level
 
-⭐⭐⭐⭐⭐ (高级)
+⭐⭐⭐⭐⭐ (Advanced)
 
-## 状态
+## Status
 
-📋 待开发
+📋 To Be Developed
 
-## 计划功能
+## Planned Features
 
 ```yaml
 apiVersion: database.example.com/v1
@@ -58,4 +58,4 @@ spec:
     servicemonitor: true
 ```
 
-最高级别的 Operator 开发学习项目。
+The highest-level Operator development learning project.

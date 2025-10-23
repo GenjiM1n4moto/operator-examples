@@ -1,41 +1,41 @@
 # ConfigMap-Syncer Operator
 
-## 项目简介
+## Project Overview
 
-ConfigMap-Syncer 是一个 Kubernetes Operator，用于在多个命名空间之间同步 ConfigMap 资源。这是一个教学项目，旨在帮助学习 Kubernetes Controller 和 Operator 的开发。
+ConfigMap-Syncer is a Kubernetes Operator that synchronizes ConfigMap resources across multiple namespaces. This is an educational project designed to help learn Kubernetes Controller and Operator development.
 
-## 功能特性
+## Features
 
-- **ConfigMap 同步**: 将源 ConfigMap 同步到指定的目标命名空间
-- **选择器支持**: 支持通过标签选择器自动发现目标命名空间
-- **状态追踪**: 提供详细的同步状态和条件信息
-- **高可用**: 支持 Leader Election，可运行多副本
+- **ConfigMap Synchronization**: Sync source ConfigMaps to specified target namespaces
+- **Selector Support**: Automatically discover target namespaces using label selectors
+- **Status Tracking**: Provide detailed synchronization status and condition information
+- **High Availability**: Support Leader Election for running multiple replicas
 
-## 快速开始
+## Quick Start
 
-### 开发模式
+### Development Mode
 
 ```bash
-# 安装 CRD
+# Install CRD
 make install
 
-# 运行 Controller（本地开发）
+# Run Controller (local development)
 make run
 ```
 
-### 生产部署
+### Production Deployment
 
 ```bash
-# 构建镜像
+# Build image
 make docker-build IMG=configmap-syncer:v1.0.0
 
-# 部署到集群
+# Deploy to cluster
 make deploy IMG=configmap-syncer:v1.0.0
 ```
 
-## 使用示例
+## Usage Examples
 
-### 基本用法
+### Basic Usage
 
 ```yaml
 apiVersion: sync.example.com/v1
@@ -52,7 +52,7 @@ spec:
     - target-ns2
 ```
 
-### 使用选择器
+### Using Selectors
 
 ```yaml
 apiVersion: sync.example.com/v1
@@ -69,66 +69,66 @@ spec:
       sync: "enabled"
 ```
 
-## 项目结构
+## Project Structure
 
 ```
 operators/configmap-syncer/
-├── api/v1/                 # CRD 定义
-├── internal/controller/    # Controller 逻辑
-├── config/                 # Kubernetes 配置
-├── cmd/                    # 程序入口
-├── hack/                   # 构建脚本
-├── test/                   # 测试文件
-├── Makefile               # 构建命令
-├── Dockerfile             # 容器构建
-└── README.md              # 项目文档
+├── api/v1/                 # CRD definitions
+├── internal/controller/    # Controller logic
+├── config/                 # Kubernetes configurations
+├── cmd/                    # Program entry point
+├── hack/                   # Build scripts
+├── test/                   # Test files
+├── Makefile               # Build commands
+├── Dockerfile             # Container build
+└── README.md              # Project documentation
 ```
 
-## 学习要点
+## Learning Points
 
-这个项目涵盖了以下 Kubernetes 开发概念：
+This project covers the following Kubernetes development concepts:
 
-1. **CRD 设计**: 自定义资源定义
-2. **Controller Pattern**: 控制器模式和 Reconcile 循环
-3. **Watch 机制**: 资源变化监听
-4. **RBAC**: 权限管理
-5. **Status 管理**: 状态和条件更新
-6. **Error Handling**: 错误处理和重试机制
+1. **CRD Design**: Custom Resource Definition
+2. **Controller Pattern**: Controller pattern and Reconcile loop
+3. **Watch Mechanism**: Resource change monitoring
+4. **RBAC**: Permission management
+5. **Status Management**: Status and condition updates
+6. **Error Handling**: Error handling and retry mechanisms
 
-## 构建和测试
+## Build and Test
 
 ```bash
-# 安装依赖
+# Install dependencies
 go mod tidy
 
-# 运行测试
+# Run tests
 make test
 
-# 生成代码
+# Generate code
 make generate
 
-# 更新 CRD
+# Update CRDs
 make manifests
 
-# 构建二进制
+# Build binary
 make build
 ```
 
-## 清理
+## Cleanup
 
 ```bash
-# 停止开发模式
-# Ctrl+C 停止 make run
+# Stop development mode
+# Press Ctrl+C to stop make run
 
-# 清理生产部署
+# Clean up production deployment
 make undeploy
 
-# 删除 CRD
+# Delete CRD
 make uninstall
 ```
 
-## 复杂度等级
+## Complexity Level
 
-⭐⭐☆☆☆ (初级)
+⭐⭐☆☆☆ (Beginner)
 
-适合作为 Kubernetes Operator 开发的入门项目。
+Suitable as an introductory project for Kubernetes Operator development.
