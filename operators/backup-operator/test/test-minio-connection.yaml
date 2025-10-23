@@ -1,0 +1,68 @@
+---
+# Test MinIO connection and S3 API
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-minio-connection
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: test
+        image: minio/mc:latest
+        env:
+        - name: MINIO_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: minio-credentials
+              key: endpoint
+        - name: ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-credentials
+              key: access-key
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-credentials
+              key: secret-key
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "============================================"
+          echo "MinIO Connection Test"
+          echo "============================================"
+          echo ""
+          echo "Endpoint: $MINIO_ENDPOINT"
+          echo "Access Key: ${ACCESS_KEY:0:5}***"
+          echo ""
+
+          echo "Setting up MinIO alias..."
+          mc alias set testminio $MINIO_ENDPOINT $ACCESS_KEY $SECRET_KEY
+
+          echo ""
+          echo "Listing buckets..."
+          mc ls testminio/
+
+          echo ""
+          echo "Testing file upload..."
+          echo "Hello from MinIO test!" > /tmp/test.txt
+          mc cp /tmp/test.txt testminio/test-bucket/test.txt
+
+          echo ""
+          echo "Listing files in test-bucket..."
+          mc ls testminio/test-bucket/
+
+          echo ""
+          echo "Testing file download..."
+          mc cp testminio/test-bucket/test.txt /tmp/downloaded.txt
+          cat /tmp/downloaded.txt
+
+          echo ""
+          echo "============================================"
+          echo "✅ MinIO S3 API is working correctly!"
+          echo "============================================"

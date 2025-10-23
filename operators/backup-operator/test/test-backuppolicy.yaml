@@ -1,0 +1,28 @@
+apiVersion: backup.backup.example.com/v1alpha1
+kind: BackupPolicy
+metadata:
+  name: production-backup
+  namespace: default
+spec:
+  # Backup every 3 minutes for testing
+  schedule: "*/3 * * * *"
+
+  # Strategy: external storage (S3/MinIO)
+  strategy: external
+
+  # Target selector
+  selector:
+    matchLabels:
+      backup: "enabled"
+
+  # Destination configuration
+  destination:
+    type: s3
+    url: s3://backups/production
+    endpoint: http://minio.minio.svc.cluster.local:9000
+    credentialsSecret: minio-backup-credentials
+
+  # Retention policy
+  retention:
+    maxBackups: 5
+    maxAge: "7d"

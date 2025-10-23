@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: s3-go-test
+  namespace: default
+spec:
+  restartPolicy: Never
+  containers:
+  - name: test
+    image: golang:1.24
+    workingDir: /workspace
+    command:
+    - /bin/bash
+    - -c
+    - |
+      set -e
+      echo "Installing test dependencies..."
+      go mod download
+      echo
+      echo "Running S3/MinIO compatibility test..."
+      go test -v ./internal/storage -run TestMinIOCompatibility
+    volumeMounts:
+    - name: workspace
+      mountPath: /workspace
+  volumes:
+  - name: workspace
+    hostPath:
+      path: /home/rayhe/github/operator-example/operators/backup-operator
+      type: Directory

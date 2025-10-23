@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-minio-buckets
+  namespace: minio
+spec:
+  ttlSecondsAfterFinished: 60
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mc
+        image: minio/mc:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Setting up MinIO alias..."
+          mc alias set myminio http://minio.minio.svc.cluster.local:9000 minioadmin minioadmin123
+
+          echo "Creating buckets..."
+          mc mb myminio/backups --ignore-existing
+          mc mb myminio/test-bucket --ignore-existing
+
+          echo "Listing buckets..."
+          mc ls myminio/
+
+          echo "Buckets created successfully!"

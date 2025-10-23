@@ -1,0 +1,47 @@
+---
+# Test PVC for backup-operator
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-backup-pvc
+  namespace: default
+  labels:
+    app: demo
+    tier: test
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# Test Pod to write data to PVC
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-data-writer
+  namespace: default
+spec:
+  containers:
+  - name: writer
+    image: busybox
+    command:
+    - /bin/sh
+    - -c
+    - |
+      echo "Writing test data to PVC..."
+      date > /data/timestamp.txt
+      echo "Hello from backup-operator test!" > /data/hello.txt
+      dd if=/dev/zero of=/data/largefile.bin bs=1M count=10
+      ls -lh /data/
+      echo "Test data written successfully!"
+      sleep infinity
+    volumeMounts:
+    - name: data
+      mountPath: /data
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: test-backup-pvc
+  restartPolicy: Always

@@ -1,0 +1,129 @@
+---
+# MinIO Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: minio
+
+---
+# MinIO PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-data
+  namespace: minio
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+# MinIO Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  namespace: minio
+  labels:
+    app: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+      - name: minio
+        image: minio/minio:latest
+        args:
+        - server
+        - /data
+        - --console-address
+        - ":9001"
+        env:
+        - name: MINIO_ROOT_USER
+          value: minioadmin
+        - name: MINIO_ROOT_PASSWORD
+          value: minioadmin123
+        ports:
+        - name: api
+          containerPort: 9000
+          protocol: TCP
+        - name: console
+          containerPort: 9001
+          protocol: TCP
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        livenessProbe:
+          httpGet:
+            path: /minio/health/live
+            port: 9000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /minio/health/ready
+            port: 9000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minio-data
+
+---
+# MinIO Service (S3 API)
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: minio
+  labels:
+    app: minio
+spec:
+  type: ClusterIP
+  selector:
+    app: minio
+  ports:
+  - name: api
+    port: 9000
+    targetPort: 9000
+    protocol: TCP
+  - name: console
+    port: 9001
+    targetPort: 9001
+    protocol: TCP
+
+---
+# MinIO Console Service (for external access)
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-console
+  namespace: minio
+  labels:
+    app: minio
+spec:
+  type: NodePort
+  selector:
+    app: minio
+  ports:
+  - name: console
+    port: 9001
+    targetPort: 9001
+    nodePort: 30001
+    protocol: TCP

@@ -1,0 +1,78 @@
+apiVersion: backup.backup.example.com/v1alpha1
+kind: BackupPolicy
+metadata:
+  labels:
+    app.kubernetes.io/name: backup-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: backuppolicy-sample
+spec:
+  # Use snapshot strategy (default)
+  strategy: snapshot
+
+  # Schedule: backup every hour
+  schedule: "0 * * * *"
+
+  # Select PVCs with label app=demo
+  selector:
+    matchLabels:
+      app: demo
+
+  # Search in these namespaces
+  namespaces:
+    - default
+    - backup-test
+
+  # Retention policy
+  retention:
+    maxBackups: 24      # Keep 24 hourly backups (1 day)
+    maxAge: "168h"      # Or 7 days, whichever comes first
+
+---
+apiVersion: backup.backup.example.com/v1alpha1
+kind: BackupPolicy
+metadata:
+  labels:
+    app.kubernetes.io/name: backup-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: backuppolicy-s3-daily
+spec:
+  # Use external storage strategy
+  strategy: external
+
+  # Schedule: backup every day at 2 AM
+  schedule: "0 2 * * *"
+
+  # Select PVCs with label tier=production
+  selector:
+    matchLabels:
+      tier: production
+
+  # Search in all specified namespaces
+  namespaces:
+    - production
+
+  # External storage destination
+  destination:
+    type: s3
+    url: s3://my-backup-bucket/backups
+    credentialsSecret: s3-credentials
+    storageClass: STANDARD
+
+  # Retention policy for S3
+  retention:
+    maxBackups: 30      # Keep 30 daily backups
+    maxAge: "720h"      # 30 days
+
+---
+# Example Secret for S3 credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: s3-credentials
+  namespace: default
+type: Opaque
+stringData:
+  access-key: "YOUR_AWS_ACCESS_KEY"
+  secret-key: "YOUR_AWS_SECRET_KEY"
+  region: "us-east-1"
+  restic-password: "your-restic-password"
